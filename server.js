@@ -4,9 +4,9 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/api", (req, res) => {
-  res.send({ message: "Welcome to the api" });
-});
+const usersRoute = require("./routes/usersRoute");
+
+app.use("/api/users", usersRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Server is running on ${process.env.APP_PORT}`);
