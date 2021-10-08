@@ -1,3 +1,6 @@
+const { genSaltSync, hashSync, compareSync } = require("bcrypt");
+const { sign } = require("jsonwebtoken");
+
 const usersQuery = require("../dbqueries/usersQuery");
 
 exports.getAllUsers = async (req, res) => {
@@ -30,5 +33,29 @@ exports.getUserById = async (req, res) => {
     });
   } catch (error) {
     return;
+  }
+};
+
+exports.registerUser = async (req, res) => {
+  const { name, email, avatar, password } = req.body;
+  try {
+    const salt = genSaltSync(10);
+    const hashedPassword = hashSync(password, salt);
+    let user = await usersQuery.registerUser(
+      name,
+      email,
+      avatar,
+      hashedPassword
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Database connection error!",
+    });
   }
 };
