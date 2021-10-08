@@ -14,4 +14,16 @@ usersQuery.getAllUsers = async () => {
   }
 };
 
+usersQuery.getUserById = async (id) => {
+  try {
+    const results = await query(
+      `SELECT id, name, email, avatar FROM users WHERE id=?`,
+      [id]
+    );
+    return results[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = usersQuery;

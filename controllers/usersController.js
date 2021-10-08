@@ -8,7 +8,27 @@ exports.getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    console.log(error);
+    return;
+  }
+};
+
+exports.getUserById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    let user = await usersQuery.getUserById(id);
+
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "Record not found!",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
     return;
   }
 };
