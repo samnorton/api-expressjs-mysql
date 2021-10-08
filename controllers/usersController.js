@@ -55,7 +55,33 @@ exports.registerUser = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Database connection error!",
+      message: "User registration failed! Database connection error!",
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const { name, email, avatar, password } = req.body;
+  const id = req.params.id;
+  try {
+    const salt = genSaltSync(10);
+    const hashedPassword = hashSync(password, salt);
+    let user = await usersQuery.updateUser(
+      name,
+      email,
+      avatar,
+      hashedPassword,
+      id
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "User updated failed! Database connection error!",
     });
   }
 };

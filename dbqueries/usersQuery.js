@@ -38,4 +38,16 @@ usersQuery.registerUser = async (name, email, avatar, password) => {
   }
 };
 
+usersQuery.updateUser = async (name, email, avatar, password, id) => {
+  try {
+    const results = await query(
+      `UPDATE users SET name=?, email=?, avatar=?, password=? WHERE id=?`,
+      [name, email, avatar, password, id]
+    );
+    return results[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = usersQuery;
