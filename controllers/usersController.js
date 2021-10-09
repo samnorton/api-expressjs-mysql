@@ -23,7 +23,7 @@ exports.getUserById = async (req, res) => {
     if (!user) {
       return res.json({
         success: false,
-        message: "Record not found!",
+        message: "User not found!",
       });
     }
 
@@ -83,5 +83,29 @@ exports.updateUser = async (req, res) => {
       success: false,
       message: "User updated failed! Database connection error!",
     });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    let findUser = await usersQuery.getUserById(id);
+
+    if (!findUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    let user = await usersQuery.deleteUser(id);
+
+    return res.json({
+      success: true,
+      message: "User was successfully deleted!",
+      data: user,
+    });
+  } catch (error) {
+    return;
   }
 };

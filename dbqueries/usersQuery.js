@@ -50,4 +50,13 @@ usersQuery.updateUser = async (name, email, avatar, password, id) => {
   }
 };
 
+usersQuery.deleteUser = async (id) => {
+  try {
+    const results = await query(`DELETE from users WHERE id=?`, [id]);
+    return results[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = usersQuery;
