@@ -59,4 +59,13 @@ usersQuery.deleteUser = async (id) => {
   }
 };
 
+usersQuery.getUserByEmail = async (email) => {
+  try {
+    const results = await query(`SELECT * from users WHERE email=?`, [email]);
+    return results[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = usersQuery;

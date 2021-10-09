@@ -109,3 +109,38 @@ exports.deleteUser = async (req, res) => {
     return;
   }
 };
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    let user = await usersQuery.getUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password!",
+      });
+    }
+
+    const foundUser = compareSync(password, user.password);
+
+    if (foundUser) {
+      user.password = undefined;
+      const jsontoken = sign({ foundUser: user.password }, "qwe1234", {
+        expiresIn: "1h",
+      });
+      return res.json({
+        success: 1,
+        message: "Login was successful!",
+        token: jsontoken,
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password!",
+      });
+    }
+  } catch (error) {
+    return;
+  }
+};
