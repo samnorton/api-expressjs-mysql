@@ -53,7 +53,7 @@ exports.registerUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.status(401).json({
       success: false,
       message: "User registration failed! Database connection error!",
     });
