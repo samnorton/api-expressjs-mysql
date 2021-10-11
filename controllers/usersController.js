@@ -1,6 +1,6 @@
+const { validationResult } = require("express-validator");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-
 const usersQuery = require("../dbqueries/usersQuery");
 
 exports.getAllUsers = async (req, res) => {
@@ -11,7 +11,7 @@ exports.getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    return;
+    return res.status(500);
   }
 };
 
@@ -32,11 +32,17 @@ exports.getUserById = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return;
+    return res.status(500);
   }
 };
 
 exports.registerUser = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).send({ errors: errors.array() });
+  }
+
   const { name, email, avatar, password } = req.body;
   try {
     const salt = genSaltSync(10);
@@ -61,6 +67,12 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).send({ errors: errors.array() });
+  }
+
   const { name, email, avatar, password } = req.body;
   const id = req.params.id;
   try {
@@ -106,7 +118,7 @@ exports.deleteUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return;
+    return res.status(500);
   }
 };
 
@@ -141,6 +153,6 @@ exports.loginUser = async (req, res) => {
       });
     }
   } catch (error) {
-    return;
+    return res.status(500);
   }
 };
